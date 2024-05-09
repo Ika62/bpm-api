@@ -22,4 +22,5 @@ public class CategoryService {
     public Category createCategory(final Category category) {
         return this.categoryRepository.save(category);
     }
+
 }

@@ -3,21 +3,16 @@ package fr.fnicolas.bpm.controller;
 import fr.fnicolas.bpm.entity.Category;
 import fr.fnicolas.bpm.entity.Product;
 import fr.fnicolas.bpm.service.CategoryService;
-import fr.fnicolas.bpm.service.ProductCategoryService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import fr.fnicolas.bpm.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,7 +21,7 @@ import java.util.Optional;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final ProductCategoryService productCategoryService;
+    private final ProductService productService;
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     private final PagedResourcesAssembler<Product> pagedResourcesAssembler;
 
@@ -58,7 +53,7 @@ public class CategoryController {
     public PagedModel<EntityModel<Product>> findProducts(@PathVariable("categoryId") final long categoryId,
                                                          @RequestParam(value = "size", defaultValue = "10") final int size,
                                                          @RequestParam(value = "page", defaultValue = "0") final int page) {
-        final var products = this.productCategoryService.findProducts(categoryId, size, page);
+        final var products = this.productService.findProducts(categoryId, size, page);
         return this.pagedResourcesAssembler.toModel(products);
     }
 
@@ -70,6 +65,6 @@ public class CategoryController {
     @PostMapping("/categories/{categoryId}/products/{productId}")
     public Product addProductToCategory(@PathVariable("categoryId") final long categoryId,
                                         @PathVariable("productId") final long productId) {
-        return this.productCategoryService.addProductToCategory(productId, categoryId);
+        return this.productService.addProductToCategory(productId, categoryId);
     }
 }
